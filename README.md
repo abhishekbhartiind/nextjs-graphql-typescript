@@ -1,34 +1,62 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## NextJS, TypeScript, GraphQL and Mongo
 
-## Getting Started
-
-First, run the development server:
+Installation:
 
 ```bash
-npm run dev
-# or
-yarn dev
+yarn create next-app nextjs-typescript-graphql-mongo
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Packages:
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```bash
+yarn add --dev typescript @types/react @types/node
+yarn add graphql
+yarn add -D @graphql-codegen/cli @graphql-codegen/typescript prettier
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Folder Structure:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- `components` reusable React components
+- `pages` public endpoints (pages and API)
+- `pages/api` GraphQL API endpoint
+- `public` Images, stylesheets etc.
+- `src` all other source files
+- `src/graphql` GraphQL schema and resolvers
+- `src/dao` Data-access objects for MongoDB
+- `store` Application state information
 
-## Learn More
+GraphQL schema into Typescript definition files; this is done by creating file `codegen.yaml`
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+overwrite: true
+hooks:
+  afterAllFileWrite:
+    - prettier --write
+schema:
+  - ./src/graphql/schema.graphql
+generates:
+  ./src/graphql/types.tsx:
+    plugins:
+      - typescript
+    config:
+      withHooks: true # We will be using React Hooks so we disable React Components
+      withHOC: false
+      withComponent: false
+      skipTypename: true
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+In package.json
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+"generate": "graphql-codegen"
+yarn generate
+```
 
-## Deploy on Vercel
+GraphQL server (provided by Apollo Server) and GraphQL client (provided by Apollo React Client)
+At the core of GraphQL ecosystems are queries, mutations and resolvers and we will need
+to create ours to be able retrieve and modify the data.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+yarn add @graphql-codegen/typescript-resolvers
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```
