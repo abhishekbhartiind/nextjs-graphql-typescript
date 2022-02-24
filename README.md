@@ -60,3 +60,12 @@ to create ours to be able retrieve and modify the data.
 yarn add @graphql-codegen/typescript-resolvers
 
 ```
+
+```bash
+yarn add apollo-server-micro graphql-import-node
+yarn -D add webpack-graphql-loader
+yarn -D add @graphql-codegen/typescript-operations @graphql-codegen/typescript-react-apollo
+yarn add @apollo/client @apollo/react-components node-fetch
+```
+
+https://medium.com/@otociulis/next-js-typescript-graphql-mongodb-%EF%B8%8F-7c342319206b
